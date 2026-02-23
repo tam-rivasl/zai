@@ -1,3 +1,4 @@
+
 "use client"
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -30,11 +31,10 @@ export default function Home() {
   const getDisplayLetter = (index: number) => {
     const char = TARGET_PHRASE[index];
     if (char === " ") return " ";
-    if (char === "T") return "T"; // Siempre visible por defecto
     
     const targetChar = char;
     // Contamos cuántas veces aparece este carácter en el target antes de esta posición para manejar repetidas
-    const countInTargetBefore = TARGET_PHRASE.slice(1, index).split("").filter(c => c === targetChar).length;
+    const countInTargetBefore = TARGET_PHRASE.slice(0, index).split("").filter(c => c === targetChar).length;
     const countInCollected = collectedLetters.filter(c => c === targetChar).length;
     
     return countInCollected > countInTargetBefore ? char : "";
