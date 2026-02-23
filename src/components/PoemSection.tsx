@@ -18,18 +18,17 @@ const poemLines = [
 ];
 
 interface PoemSectionProps {
-  onCollectLetters: (letters: string[], event: React.MouseEvent) => void;
+  onCollectLetters: (letters: string[]) => void;
 }
 
 export function PoemSection({ onCollectLetters }: PoemSectionProps) {
   const [clickedLines, setClickedLines] = useState<number[]>([]);
 
-  const handleLineClick = (index: number, letters: string[], event: React.MouseEvent) => {
-    // Solo permitir click si la línea tiene letras y no ha sido clickeada
+  const handleLineClick = (index: number, letters: string[]) => {
     if (!letters || letters.length === 0 || clickedLines.includes(index)) return;
     
     setClickedLines(prev => [...prev, index]);
-    onCollectLetters(letters, event);
+    onCollectLetters(letters);
   };
 
   return (
@@ -49,7 +48,7 @@ export function PoemSection({ onCollectLetters }: PoemSectionProps) {
                   clickedLines.includes(index) && "line-glow text-primary font-medium",
                   isClickable && "clickable cursor-pointer hover:scale-[1.01]"
                 )}
-                onClick={(e) => handleLineClick(index, line.letters || [], e)}
+                onClick={() => handleLineClick(index, line.letters || [])}
               >
                 <p className="text-xl md:text-2xl font-light leading-relaxed">
                   {line.text}

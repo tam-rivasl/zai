@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { PoemSection } from '@/components/PoemSection';
-import { PenguinGroup, CollectorPenguin } from '@/components/Penguin';
+import { PenguinGroup } from '@/components/Penguin';
 import { cn } from '@/lib/utils';
 
 const TARGET_PHRASE = "TE QUIERO PINGUI";
@@ -10,7 +10,6 @@ const TARGET_PHRASE = "TE QUIERO PINGUI";
 export default function Home() {
   const [collectedLetters, setCollectedLetters] = useState<string[]>([]);
   const [stars, setStars] = useState<{ id: number; top: string; left: string; size: string; duration: string }[]>([]);
-  const [animation, setAnimation] = useState<{ startX: number; startY: number; endX: number; endY: number } | null>(null);
   const messageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -24,40 +23,24 @@ export default function Home() {
     setStars(newStars);
   }, []);
 
-  const handleCollect = (letters: string[], event: React.MouseEvent) => {
-    if (!messageRef.current) return;
-
-    const rect = messageRef.current.getBoundingClientRect();
-    const endX = rect.left + rect.width / 2;
-    const endY = rect.top;
-
-    setAnimation({
-      startX: event.clientX,
-      startY: event.clientY,
-      endX,
-      endY
-    });
-
-    // Añadir las letras después de un pequeño retraso para que coincida con el pingüino llegando
-    setTimeout(() => {
-      setCollectedLetters(prev => [...prev, ...letters]);
-      setAnimation(null);
-    }, 1300);
+  const handleCollect = (letters: string[]) => {
+    setCollectedLetters(prev => [...prev, ...letters]);
   };
 
   const getDisplayLetter = (index: number) => {
     const char = TARGET_PHRASE[index];
     if (char === " ") return " ";
-    if (char === "T") return "T"; // Siempre visible
+    if (char === "T") return "T"; // Siempre visible por defecto
     
     const targetChar = char;
+    // Contamos cuántas veces aparece este carácter en el target antes de esta posición para manejar repetidas
     const countInTargetBefore = TARGET_PHRASE.slice(1, index).split("").filter(c => c === targetChar).length;
     const countInCollected = collectedLetters.filter(c => c === targetChar).length;
     
     return countInCollected > countInTargetBefore ? char : "";
   };
 
-  const hasStarted = collectedLetters.length > 0 || animation !== null;
+  const hasStarted = collectedLetters.length > 0;
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-start py-20 relative overflow-hidden">
@@ -76,11 +59,9 @@ export default function Home() {
         />
       ))}
 
-      {animation && <CollectorPenguin {...animation} />}
-
       <PoemSection onCollectLetters={handleCollect} />
 
-      {/* Recolector de Mensaje Oculto - Solo aparece si ya empezó */}
+      {/* Recolector de Mensaje Oculto - Aparece solo al empezar la recolección */}
       <div 
         ref={messageRef}
         className={cn(
