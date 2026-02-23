@@ -4,15 +4,17 @@ import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 
 const poemLines = [
-  { text: "Cuando el alma Pese y duela vivir, yo estaré ahí", letters: ["E"] },
-  { text: "Si la inercia frenética del dolor no sacia la búsqueda insaciable de dopamina", letters: ["Q", "U"] },
-  { text: "No te preocupes yo te la brindo, pero acompañada de calma", letters: ["I"] },
+  { text: "Cuando el alma pese y duela vivi, yo estaré ahí", letters: ["E"] },
+  { text: "Si la inerca frenética del dolo no saca la búsqeda insacable de dopamna", letters: ["Q", "U"] },
+  { text: "No te precpes yo te la brndo, pero acompañada de calma", letters: ["I"] },
   { text: "", isSpacer: true },
-  { text: "Aunque mi léxico sea básico y seas un idioma antiguo", letters: ["E"] },
-  { text: "te haré ver cuánto e quiero al tacto con gentileza, Aún estoy a tiempo para recorrer tu universo", letters: ["R", "O"] },
-  { text: "y si lo maniaco te despoja de la incertdumbre y el luto, ahí estaré corriendo tus pastizales en llamas", letters: ["P", "I"] },
-  { text: "no soy buena con las palabras, consejos de vida o motivación, pero sere el mejor amigo del hombre", letters: ["N", "G"] },
-  { text: "no necesito nada mas que tu presencia para que me tengas oda la vida.", letters: ["U", "I"] }
+  { text: "Anque mi léxco sea básico y seas un idioma antguo", letters: ["E"] },
+  { text: "te haré ver cánto e qiero al tacto con gentleza,", letters: ["R", "O"] },
+  { text: "Aún estoy a tempo para recorrer tu nverso", letters: ["P", "I"] },
+  { text: "y si lo manaco te despoja de la incertidmbre y el luto, ahí estaré corriendo tus pastizales en llamas", letters: ["N", "G"] },
+  { text: "no soy buena con las palabras, consejos de vida o motvación, pero seré el mejor amigo del hombre", letters: ["U"] },
+  { text: "no necesito nada más que tu presenca para que me tengas oda la vida.", letters: ["I"] },
+  { text: "Y si algo no cuerda dale significado uniendolas", letters: [] }
 ];
 
 interface PoemSectionProps {
@@ -41,7 +43,8 @@ export function PoemSection({ onCollectLetters }: PoemSectionProps) {
                 key={index} 
                 className={cn(
                   "poem-line group",
-                  clickedLines.includes(index) && "line-glow text-primary font-medium"
+                  clickedLines.includes(index) && "line-glow text-primary font-medium",
+                  line.letters && line.letters.length > 0 && !clickedLines.includes(index) && "cursor-pointer hover:scale-[1.01]"
                 )}
                 onClick={() => handleLineClick(index, line.letters || [])}
               >

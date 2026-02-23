@@ -6,14 +6,13 @@ import { PenguinGroup } from '@/components/Penguin';
 import { cn } from '@/lib/utils';
 
 const TARGET_PHRASE = "TE QUIERO PINGUI";
-const MISSING_LETTERS = ["E", "Q", "U", "I", "E", "R", "O", "P", "I", "N", "G", "U", "I"];
 
 export default function Home() {
   const [collectedLetters, setCollectedLetters] = useState<string[]>([]);
   const [stars, setStars] = useState<{ id: number; top: string; left: string; size: string; duration: string }[]>([]);
 
   useEffect(() => {
-    // Generate static stars on client to avoid hydration mismatch
+    // Generar estrellas estáticas para evitar desajustes de hidratación
     const newStars = Array.from({ length: 150 }).map((_, i) => ({
       id: i,
       top: `${Math.random() * 100}%`,
@@ -28,16 +27,15 @@ export default function Home() {
     setCollectedLetters(prev => [...prev, ...letters]);
   };
 
-  // Build the phrase display based on collected letters
-  // Starting 'T' is already there, other letters come from MISSING_LETTERS sequence
   const getDisplayLetter = (index: number) => {
     const char = TARGET_PHRASE[index];
     if (char === " ") return " ";
-    if (char === "T") return "T"; // Always visible
+    if (char === "T") return "T"; // Siempre visible
     
-    // Check if we have collected enough of this letter
     const targetChar = char;
+    // Contar cuántas veces aparece esta letra antes de la posición actual en la frase objetivo
     const countInTargetBefore = TARGET_PHRASE.slice(1, index).split("").filter(c => c === targetChar).length;
+    // Contar cuántas veces se ha recolectado esta letra
     const countInCollected = collectedLetters.filter(c => c === targetChar).length;
     
     return countInCollected > countInTargetBefore ? char : "";
@@ -45,7 +43,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-start py-20 relative overflow-hidden">
-      {/* Estrellas */}
+      {/* Estrellas de fondo */}
       {stars.map(star => (
         <div 
           key={star.id} 
