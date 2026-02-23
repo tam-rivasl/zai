@@ -10,7 +10,7 @@ const poemLines = [
   { text: "No te preocups yo te la brindo, pero acompañada de calma", letters: ["E"] },
   { text: "", isSpacer: true },
   { text: "Aunque mi léxico sea básico y seas un idioma antiguo", letters: [] },
-  { text: "te hare ver cuanto te uiero al tacto con Gentileza, A Un estoy a tiemo para recorer tu universo", letters: ["Q", "P", "R"] },
+  { text: "te hare ver cuanto te uiero al tacto con Gentileza, A Un estoy a tiemo para recorer tu universo", letters: ["Q", "P", "R", "U"] },
   { text: "y si lo manaco te despoja de la incertidmbre y el luto, ahí estaré corriendo tus pastizales en llamas", letters: ["I", "U"] },
   { text: "no soy buena con las palabras, consejos de vida o motivacón, pro seré el mejor amigo del hombre", letters: ["I", "E"] },
   { text: "no necesto nada mas que tu presecia para que me tengas tda la vida y si algo no cuerda dale sinificado uniéndolas", letters: ["I", "N", "O", "G"] }
@@ -43,7 +43,7 @@ export function PoemSection({ onCollectLetters }: PoemSectionProps) {
               <div 
                 key={index} 
                 className={cn(
-                  "poem-line group",
+                  "poem-line group transition-all duration-700",
                   clickedLines.includes(index) && "line-glow text-primary font-medium",
                   isClickable && "clickable cursor-pointer hover:scale-[1.01]"
                 )}
