@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 
 const poemLines = [
-  { text: "Cando el alama pese y duela vivir, yo estaré ahí", letters: ["U"] },
+  { text: "Cando el alma pese y duela vivir, yo estaré ahí", letters: ["U"] },
   { text: "Si la inercia frenéica del dolor no sacia la búsqueda insaciable de dopamina", letters: ["T"] },
   { text: "No te preocups yo te la brindo, pero acompañada de calma", letters: ["E"] },
   { text: "", isSpacer: true },
