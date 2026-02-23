@@ -72,11 +72,22 @@
   animation: walk-complex 25s linear infinite reverse;
 }
 
-.poem-line {
-  @apply transition-all duration-700 cursor-pointer py-3 px-4 rounded-xl border border-transparent;
+@keyframes collect-travel {
+  0% { transform: translate(0, 0) scale(0.5); opacity: 0; }
+  20% { opacity: 1; transform: translate(0, -20px) scale(1); }
+  80% { opacity: 1; transform: translate(var(--target-x), var(--target-y)) scale(1); }
+  100% { opacity: 0; transform: translate(var(--target-x), calc(var(--target-y) + 10px)) scale(0.8); }
 }
 
-.poem-line:hover {
+.animate-collect {
+  animation: collect-travel 1.5s forwards cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.poem-line {
+  @apply transition-all duration-700 py-3 px-4 rounded-xl border border-transparent;
+}
+
+.poem-line.clickable:hover {
   @apply bg-white/5 border-white/10;
   text-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
 }

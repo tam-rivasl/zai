@@ -6,13 +6,14 @@ import { cn } from '@/lib/utils';
 interface PenguinProps {
   className?: string;
   delay?: string;
+  style?: React.CSSProperties;
 }
 
-export function Penguin({ className, delay }: PenguinProps) {
+export function Penguin({ className, delay, style }: PenguinProps) {
   return (
     <div 
       className={cn("fixed bottom-8 z-50 pointer-events-none", className)}
-      style={{ animationDelay: delay }}
+      style={{ ...style, animationDelay: delay }}
     >
       <div className="relative w-12 h-12 animate-jump">
         {/* Cuerpo */}
@@ -34,6 +35,31 @@ export function Penguin({ className, delay }: PenguinProps) {
         {/* Patas */}
         <div className="absolute -bottom-1 left-2 w-3 h-2 bg-orange-600 rounded-full"></div>
         <div className="absolute -bottom-1 right-2 w-3 h-2 bg-orange-600 rounded-full"></div>
+      </div>
+    </div>
+  );
+}
+
+export function CollectorPenguin({ startX, startY, endX, endY }: { startX: number; startY: number; endX: number; endY: number }) {
+  const dx = endX - startX;
+  const dy = endY - startY;
+
+  return (
+    <div 
+      className="fixed z-[100] pointer-events-none animate-collect"
+      style={{ 
+        left: startX, 
+        top: startY,
+        '--target-x': `${dx}px`,
+        '--target-y': `${dy}px`
+      } as React.CSSProperties}
+    >
+      <div className="relative w-8 h-8">
+        <div className="absolute inset-0 bg-black rounded-full"></div>
+        <div className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-5 h-6 bg-white rounded-full"></div>
+        <div className="absolute top-2 left-2 w-1 h-1 bg-white rounded-full"></div>
+        <div className="absolute top-2 right-2 w-1 h-1 bg-white rounded-full"></div>
+        <div className="absolute top-3.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-orange-500 rounded-full"></div>
       </div>
     </div>
   );

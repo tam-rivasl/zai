@@ -18,25 +18,28 @@ const poemLines = [
 ];
 
 interface PoemSectionProps {
-  onCollectLetters: (letters: string[]) => void;
+  onCollectLetters: (letters: string[], event: React.MouseEvent) => void;
 }
 
 export function PoemSection({ onCollectLetters }: PoemSectionProps) {
   const [clickedLines, setClickedLines] = useState<number[]>([]);
 
-  const handleLineClick = (index: number, letters: string[]) => {
-    if (clickedLines.includes(index) || !letters.length) return;
+  const handleLineClick = (index: number, letters: string[], event: React.MouseEvent) => {
+    // Solo permitir click si la línea tiene letras y no ha sido clickeada
+    if (!letters || letters.length === 0 || clickedLines.includes(index)) return;
     
     setClickedLines(prev => [...prev, index]);
-    onCollectLetters(letters);
+    onCollectLetters(letters, event);
   };
 
   return (
     <section className="relative z-10 w-full max-w-4xl mx-auto px-6 py-12 text-center">
       <div className="glass-panel p-8 md:p-16 rounded-[2.5rem] overflow-hidden relative">
         <div className="space-y-4 md:space-y-6">
-          {poemLines.map((line, index) => (
-            line.isSpacer ? (
+          {poemLines.map((line, index) => {
+            const isClickable = line.letters && line.letters.length > 0 && !clickedLines.includes(index);
+            
+            return line.isSpacer ? (
               <div key={index} className="h-8" />
             ) : (
               <div 
@@ -44,16 +47,16 @@ export function PoemSection({ onCollectLetters }: PoemSectionProps) {
                 className={cn(
                   "poem-line group",
                   clickedLines.includes(index) && "line-glow text-primary font-medium",
-                  line.letters && line.letters.length > 0 && !clickedLines.includes(index) && "cursor-pointer hover:scale-[1.01]"
+                  isClickable && "clickable cursor-pointer hover:scale-[1.01]"
                 )}
-                onClick={() => handleLineClick(index, line.letters || [])}
+                onClick={(e) => handleLineClick(index, line.letters || [], e)}
               >
                 <p className="text-xl md:text-2xl font-light leading-relaxed">
                   {line.text}
                 </p>
               </div>
-            )
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
