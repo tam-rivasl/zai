@@ -2,75 +2,95 @@
 
 import React, { useState, useEffect } from 'react';
 import { PoemSection } from '@/components/PoemSection';
-import { VerseGenerator } from '@/components/VerseGenerator';
-import { SavedVerses } from '@/components/SavedVerses';
-import { Penguin } from '@/components/Penguin';
-import { Toaster } from '@/components/ui/toaster';
-import { useToast } from '@/hooks/use-toast';
+import { PenguinGroup } from '@/components/Penguin';
+import { cn } from '@/lib/utils';
+
+const TARGET_PHRASE = "TE QUIERO PINGUI";
+const MISSING_LETTERS = ["E", "Q", "U", "I", "E", "R", "O", "P", "I", "N", "G", "U", "I"];
 
 export default function Home() {
-  const [savedVerses, setSavedVerses] = useState<string[]>([]);
-  const { toast } = useToast();
+  const [collectedLetters, setCollectedLetters] = useState<string[]>([]);
+  const [stars, setStars] = useState<{ id: number; top: string; left: string; size: string; duration: string }[]>([]);
 
-  // Load from local storage on mount
   useEffect(() => {
-    const stored = localStorage.getItem('alma-lirica-verses');
-    if (stored) {
-      try {
-        setSavedVerses(JSON.parse(stored));
-      } catch (e) {
-        console.error("Error loading saved verses");
-      }
-    }
+    // Generate static stars on client to avoid hydration mismatch
+    const newStars = Array.from({ length: 150 }).map((_, i) => ({
+      id: i,
+      top: `${Math.random() * 100}%`,
+      left: `${Math.random() * 100}%`,
+      size: `${Math.random() * 3 + 1}px`,
+      duration: `${Math.random() * 3 + 2}s`
+    }));
+    setStars(newStars);
   }, []);
 
-  const saveToStorage = (newVerses: string[]) => {
-    setSavedVerses(newVerses);
-    localStorage.setItem('alma-lirica-verses', JSON.stringify(newVerses));
+  const handleCollect = (letters: string[]) => {
+    setCollectedLetters(prev => [...prev, ...letters]);
   };
 
-  const handleSave = (text: string) => {
-    if (savedVerses.includes(text)) {
-      toast({
-        description: "Este verso ya está en tu colección.",
-      });
-      return;
-    }
-    const updated = [text, ...savedVerses];
-    saveToStorage(updated);
-    toast({
-      description: "Verso guardado con éxito.",
-    });
-  };
-
-  const handleRemove = (index: number) => {
-    const updated = savedVerses.filter((_, i) => i !== index);
-    saveToStorage(updated);
+  // Build the phrase display based on collected letters
+  // Starting 'T' is already there, other letters come from MISSING_LETTERS sequence
+  const getDisplayLetter = (index: number) => {
+    const char = TARGET_PHRASE[index];
+    if (char === " ") return " ";
+    if (char === "T") return "T"; // Always visible
+    
+    // Check if we have collected enough of this letter
+    const targetChar = char;
+    const countInTargetBefore = TARGET_PHRASE.slice(1, index).split("").filter(c => c === targetChar).length;
+    const countInCollected = collectedLetters.filter(c => c === targetChar).length;
+    
+    return countInCollected > countInTargetBefore ? char : "";
   };
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-start py-12">
-      <header className="relative z-10 text-center mb-8 px-6">
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary tracking-tight mb-2">
-          Alma Lírica
-        </h1>
-        <p className="text-muted-foreground italic max-w-md mx-auto">
-          Un refugio digital donde las palabras curan y la tecnología acompaña.
+    <main className="min-h-screen flex flex-col items-center justify-start py-20 relative overflow-hidden">
+      {/* Estrellas */}
+      {stars.map(star => (
+        <div 
+          key={star.id} 
+          className="star" 
+          style={{ 
+            top: star.top, 
+            left: star.left, 
+            width: star.size, 
+            height: star.size,
+            '--duration': star.duration 
+          } as React.CSSProperties} 
+        />
+      ))}
+
+      <PoemSection onCollectLetters={handleCollect} />
+
+      {/* Recolector de Mensaje Oculto */}
+      <div className="mt-auto mb-32 z-20 flex flex-col items-center gap-6">
+        <p className="text-muted-foreground text-sm uppercase tracking-widest opacity-50">
+          Mensaje Recolectado
         </p>
-      </header>
+        <div className="flex flex-wrap justify-center gap-2 md:gap-4 px-6">
+          {TARGET_PHRASE.split("").map((char, i) => (
+            char === " " ? (
+              <div key={i} className="w-4 md:w-8" />
+            ) : (
+              <div 
+                key={i} 
+                className={cn(
+                  "letter-slot",
+                  getDisplayLetter(i) && "letter-filled"
+                )}
+              >
+                {getDisplayLetter(i)}
+              </div>
+            )
+          ))}
+        </div>
+      </div>
 
-      <PoemSection onSaveLine={handleSave} />
-      
-      <VerseGenerator onSaveVerse={handleSave} />
-
-      <SavedVerses verses={savedVerses} onRemove={handleRemove} />
-
-      <footer className="relative z-10 mt-auto py-12 text-center text-muted-foreground text-xs opacity-50">
-        <p>© {new Date().getFullYear()} Alma Lírica • Hecho con gentileza</p>
+      <footer className="relative z-10 mt-auto pb-8 text-center text-muted-foreground text-xs opacity-30">
+        <p>© {new Date().getFullYear()} Alma Lírica • Con amor y pingüinos</p>
       </footer>
 
-      <Penguin />
-      <Toaster />
+      <PenguinGroup />
     </main>
   );
 }

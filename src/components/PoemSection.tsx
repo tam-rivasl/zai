@@ -1,48 +1,55 @@
 "use client"
 
-import React from 'react';
-import { Heart } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import React, { useState } from 'react';
+import { cn } from '@/lib/utils';
 
 const poemLines = [
-  "Cuando el alma pese",
-  "y duela vivir, yo estaré ahí.",
-  "Si la inercia frenética del dolor",
-  "no sacia la búsqueda insaciable de dopamina,",
-  "no te preocupes, yo te la brindo,",
-  "pero acompañada de calma.",
-  "Aunque mi léxico sea básico y seas un idioma antiguo,",
-  "te haré ver cuánto te quiero al tacto con gentileza.",
-  "Aún estoy a tiempo para recorrer tu universo.",
-  "Y si lo maniaco te despoja de la incertidumbre y el luto,",
-  "ahí estaré corriendo tus pastizales en llamas.",
-  "No soy buena con las palabras, pero seré el mejor amigo del hombre.",
-  "No necesito nada más que tu presencia para que me tengas toda la vida.",
-  "Y si sientes que algo anda mal, la búsqueda siempre tendrá respuesta."
+  { text: "Cuando el alma Pese y duela vivir, yo estaré ahí", letters: ["E"] },
+  { text: "Si la inercia frenética del dolor no sacia la búsqueda insaciable de dopamina", letters: ["Q", "U"] },
+  { text: "No te preocupes yo te la brindo, pero acompañada de calma", letters: ["I"] },
+  { text: "", isSpacer: true },
+  { text: "Aunque mi léxico sea básico y seas un idioma antiguo", letters: ["E"] },
+  { text: "te haré ver cuánto e quiero al tacto con gentileza, Aún estoy a tiempo para recorrer tu universo", letters: ["R", "O"] },
+  { text: "y si lo maniaco te despoja de la incertdumbre y el luto, ahí estaré corriendo tus pastizales en llamas", letters: ["P", "I"] },
+  { text: "no soy buena con las palabras, consejos de vida o motivación, pero sere el mejor amigo del hombre", letters: ["N", "G"] },
+  { text: "no necesito nada mas que tu presencia para que me tengas oda la vida.", letters: ["U", "I"] }
 ];
 
 interface PoemSectionProps {
-  onSaveLine: (line: string) => void;
+  onCollectLetters: (letters: string[]) => void;
 }
 
-export function PoemSection({ onSaveLine }: PoemSectionProps) {
+export function PoemSection({ onCollectLetters }: PoemSectionProps) {
+  const [clickedLines, setClickedLines] = useState<number[]>([]);
+
+  const handleLineClick = (index: number, letters: string[]) => {
+    if (clickedLines.includes(index) || !letters.length) return;
+    
+    setClickedLines(prev => [...prev, index]);
+    onCollectLetters(letters);
+  };
+
   return (
-    <section className="relative z-10 w-full max-w-2xl mx-auto px-6 py-16 lg:py-24 text-center">
-      <div className="glass-panel p-8 md:p-12 rounded-2xl">
-        <div className="space-y-4">
+    <section className="relative z-10 w-full max-w-4xl mx-auto px-6 py-12 text-center">
+      <div className="glass-panel p-8 md:p-16 rounded-[2.5rem] overflow-hidden relative">
+        <div className="space-y-4 md:space-y-6">
           {poemLines.map((line, index) => (
-            <div key={index} className="group relative">
-              <p className="text-lg md:text-xl font-light poem-line leading-relaxed">
-                {line}
-              </p>
-              <button
-                onClick={() => onSaveLine(line)}
-                className="absolute -right-8 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity text-primary hover:text-white"
-                title="Guardar verso"
+            line.isSpacer ? (
+              <div key={index} className="h-8" />
+            ) : (
+              <div 
+                key={index} 
+                className={cn(
+                  "poem-line group",
+                  clickedLines.includes(index) && "line-glow text-primary font-medium"
+                )}
+                onClick={() => handleLineClick(index, line.letters || [])}
               >
-                <Heart size={16} />
-              </button>
-            </div>
+                <p className="text-xl md:text-2xl font-light leading-relaxed">
+                  {line.text}
+                </p>
+              </div>
+            )
           ))}
         </div>
       </div>

@@ -4,26 +4,26 @@
 
 @layer base {
   :root {
-    --background: 214 16% 11%;
+    --background: 230 35% 7%;
     --foreground: 210 20% 98%;
-    --card: 214 16% 13%;
+    --card: 230 35% 10%;
     --card-foreground: 210 20% 98%;
-    --popover: 214 16% 11%;
+    --popover: 230 35% 7%;
     --popover-foreground: 210 20% 98%;
-    --primary: 219 43% 75%;
-    --primary-foreground: 214 16% 11%;
-    --secondary: 253 50% 34%;
+    --primary: 198 93% 60%;
+    --primary-foreground: 230 35% 7%;
+    --secondary: 260 50% 30%;
     --secondary-foreground: 210 20% 98%;
-    --muted: 214 16% 20%;
+    --muted: 230 35% 15%;
     --muted-foreground: 215 20% 65%;
-    --accent: 253 50% 34%;
+    --accent: 198 93% 60%;
     --accent-foreground: 210 20% 98%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 20% 98%;
-    --border: 214 16% 20%;
-    --input: 214 16% 20%;
-    --ring: 219 43% 75%;
-    --radius: 1rem;
+    --border: 230 35% 20%;
+    --input: 230 35% 20%;
+    --ring: 198 93% 60%;
+    --radius: 1.5rem;
   }
 }
 
@@ -33,46 +33,72 @@
   }
   body {
     @apply bg-background text-foreground font-body overflow-x-hidden;
+    background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
   }
 }
 
-.particles-bg {
-  position: fixed;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background-image: radial-gradient(rgba(162, 183, 219, 0.15) 1px, transparent 1px);
-  background-size: 60px 60px;
-  animation: fondo 40s linear infinite;
-  opacity: 0.3;
-  pointer-events: none;
-  z-index: 0;
+.star {
+  @apply absolute bg-white rounded-full opacity-50;
+  animation: twinkle var(--duration, 3s) infinite ease-in-out;
 }
 
-@keyframes fondo {
-  from { transform: translateY(0); }
-  to { transform: translateY(-300px); }
+@keyframes twinkle {
+  0%, 100% { opacity: 0.2; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.3); }
 }
 
-@keyframes walk {
-  0% { transform: translateX(-100px); }
-  100% { transform: translateX(calc(100vw + 100px)); }
+@keyframes jump {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-40px) rotate(10deg); }
 }
 
-.animate-walk {
-  animation: walk 25s linear infinite;
+.animate-jump {
+  animation: jump 3s infinite ease-in-out;
+}
+
+@keyframes walk-complex {
+  0% { transform: translateX(-10vw) translateY(0); }
+  25% { transform: translateX(25vw) translateY(-10px); }
+  50% { transform: translateX(50vw) translateY(0); }
+  75% { transform: translateX(75vw) translateY(-10px); }
+  100% { transform: translateX(110vw) translateY(0); }
+}
+
+.animate-walk-slow {
+  animation: walk-complex 40s linear infinite;
+}
+
+.animate-walk-fast {
+  animation: walk-complex 25s linear infinite reverse;
 }
 
 .poem-line {
-  @apply transition-all duration-500 cursor-default py-1;
+  @apply transition-all duration-700 cursor-pointer py-3 px-4 rounded-xl border border-transparent;
 }
 
 .poem-line:hover {
-  text-shadow: 0 0 12px rgba(162, 183, 219, 0.8);
-  @apply text-primary scale-105;
+  @apply bg-white/5 border-white/10;
+  text-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
+}
+
+.line-glow {
+  animation: glow-pulse 1s ease-out;
+}
+
+@keyframes glow-pulse {
+  0% { @apply bg-primary/40 shadow-[0_0_0_0_rgba(56,189,248,0.7)]; }
+  100% { @apply bg-transparent shadow-[0_0_40px_20px_rgba(56,189,248,0)]; }
 }
 
 .glass-panel {
-  @apply bg-white/5 backdrop-blur-md border border-white/10 shadow-2xl;
+  @apply bg-black/20 backdrop-blur-xl border border-white/10 shadow-2xl;
+}
+
+.letter-slot {
+  @apply w-10 h-12 md:w-12 md:h-14 flex items-center justify-center border-b-2 border-primary/30 text-2xl md:text-3xl font-bold text-primary transition-all duration-500;
+}
+
+.letter-filled {
+  @apply border-primary text-white scale-110;
+  text-shadow: 0 0 10px rgba(56, 189, 248, 0.8);
 }
