@@ -45,7 +45,7 @@ export default function Home() {
       <PoemSection onCollectLetters={handleCollect} />
 
       <footer className="relative z-10 mt-auto pb-8 text-center text-muted-foreground text-xs opacity-30">
-        <p>© {new Date().getFullYear()} Alma Lírica • Con amor y pingüinos</p>
+        <p>© {new Date().getFullYear()}  • Con amorcito y pingüinitos</p>
       </footer>
 
       <PenguinGroup />
